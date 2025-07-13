@@ -11,18 +11,19 @@ const app = express();
 dotenv.config();
 const PORT = process.env.PORT;
 
-app.use(express.json());
-app.use(cookieParser());
-
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true, //Allows frontend to send cookies
   })
 );
+
+app.use(express.json());
+app.use(cookieParser());
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+
 
 app.listen(PORT, () => {
   console.log(`Server is running at PORT ${PORT}`);

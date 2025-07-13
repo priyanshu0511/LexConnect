@@ -11,7 +11,7 @@ export const signup = async (req, res) => {
     if (password.length < 8) {
       return res
         .status(400)
-        .json({ message: "Password must be of 8 characters." });
+        .json({ message: "Password must be of atleast 8 characters." });
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -123,26 +123,29 @@ export const onboard = async (req, res) => {
       !learningLanguage ||
       !location
     ) {
-      return res
-        .status(400)
-        .json({ 
-          message: "All fields are required", 
-          missingFields: [
-            !fullName && "fullName",
-            !bio && "bio",
-            !nativeLanguage && "nativeLanguage",
-            !learningLanguage && "learningLanguage",
-            !location && "location"
-          ].filter(Boolean)
-        });
+      return res.status(400).json({
+        message: "All fields are required",
+        missingFields: [
+          !fullName && "fullName",
+          !bio && "bio",
+          !nativeLanguage && "nativeLanguage",
+          !learningLanguage && "learningLanguage",
+          !location && "location",
+        ].filter(Boolean),
+      });
     }
 
-    const updatedUser=await User.findByIdAndUpdate(userId,{
-      ...req.body, isOnBoarded: true
-    }, {new: true})
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        ...req.body,
+        isOnBoarded: true,
+      },
+      { new: true }
+    );
 
-    if(!updatedUser){
-      return res.status(404).json({message:"User not found."});
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found." });
     }
 
     try {
@@ -151,15 +154,16 @@ export const onboard = async (req, res) => {
         name: updatedUser.fullName,
         image: updatedUser.profilePic || "",
       });
-      console.log(`Stream user updated after unboarding : ${updatedUser.fullName}`);
+      console.log(
+        `Stream user updated after unboarding : ${updatedUser.fullName}`
+      );
     } catch (error) {
       console.log("Error creating stream user : ", error);
     }
 
-    res.status(200).json({success:true, user: updatedUser});
-
+    res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
-    console.log("Onboarding error :", error)
-    res.status(500).json({message: "Internal Server Error"});
+    console.log("Onboarding error :", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
