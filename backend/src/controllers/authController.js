@@ -60,7 +60,7 @@ export const signup = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
     });
 
-    res.status(201).json({ success: true, message: "User has been created !" });
+    res.status(201).json({ success: true, user: newUser });
   } catch (error) {
     console.log("Error during signing up", error);
     res.status(500).json({ message: "Internal Server Error" });
