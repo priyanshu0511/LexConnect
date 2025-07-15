@@ -7,16 +7,17 @@ import NotificationsPage from "./pages/NotificationsPage";
 import ChatPage from "./pages/ChatPage";
 import CallPage from "./pages/CallPage";
 import toast, { Toaster } from "react-hot-toast";
-import { useQuery } from "@tanstack/react-query";
-import { axiosInstance } from "./lib/axios";
 import PageLoader from "./components/PageLoader";
-import { getAuthUser } from "./lib/api";
 import useAuthUser from "./hooks/useAuthUser";
+import Layout from "./components/Layout";
+import { useThemeStore } from "./store/useThemeStore";
 
 function App() {
   const { isLoading, authData } = useAuthUser();
 
   const authUser = authData?.user;
+
+  const {theme}=useThemeStore();
 
   const isAuthenticated = Boolean(authUser);
   const isOnBoarded = authUser?.isOnBoarded;
@@ -24,13 +25,15 @@ function App() {
   if (isLoading) return <PageLoader />;
 
   return (
-    <div className="h-screen" data-theme="retro">
+    <div className="h-screen" data-theme={theme}>
       <Routes>
         <Route
           path="/"
           element={
             isAuthenticated && isOnBoarded ? (
-              <HomePage />
+              <Layout showSidebar={true} >
+                <HomePage />
+              </Layout>
             ) : (
               <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
             )
@@ -38,11 +41,23 @@ function App() {
         />
         <Route
           path="/login"
-          element={!isAuthenticated ? <LoginPage /> : <Navigate to="/" />}
+          element={
+            !isAuthenticated ? (
+              <LoginPage />
+            ) : (
+              <Navigate to={isOnBoarded ? "/" : "/onboarding"} />
+            )
+          }
         />
         <Route
           path="/signup"
-          element={!isAuthenticated ? <SignupPage /> : <Navigate to="/" />}
+          element={
+            !isAuthenticated ? (
+              <SignupPage />
+            ) : (
+              <Navigate to={isOnBoarded ? "/" : "/onboarding"} />
+            )
+          }
         />
         <Route
           path="/onboarding"
