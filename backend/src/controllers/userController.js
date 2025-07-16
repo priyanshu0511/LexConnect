@@ -9,7 +9,7 @@ export const getRecommendedUsers = async (req, res) => {
     const recommendedUsers = await User.find({
       $and: [
         { _id: { $ne: currentUserId } }, // ne= not equal, So don't include user
-        { $id: { $nin: currentUser.friends } }, // nin= not in, So don't include user's friends
+        { _id: { $nin: currentUser.friends } }, // nin= not in, So don't include user's friends
         { isOnboarded: true },
       ],
     });
