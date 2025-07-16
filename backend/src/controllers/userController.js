@@ -145,7 +145,7 @@ export const getOutgoingFriendRequests = async (req, res) => {
       sender: req.user.id,
       status: "pending",
     }).populate(
-      "reciever",
+      "receiver",
       "fullName profilePic nativeLanguage learningLanguage"
     );
 
