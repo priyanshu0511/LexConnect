@@ -10,7 +10,7 @@ export const getRecommendedUsers = async (req, res) => {
       $and: [
         { _id: { $ne: currentUserId } }, // ne= not equal, So don't include user
         { _id: { $nin: currentUser.friends } }, // nin= not in, So don't include user's friends
-        { isOnboarded: true },
+        { isOnBoarded: true },
       ],
     });
     res.status(200).json(recommendedUsers);
@@ -141,7 +141,7 @@ export const getFriendRequests = async (req, res) => {
 
 export const getOutgoingFriendRequests = async (req, res) => {
   try {
-    const outgoingRequest = FriendRequest.find({
+    const outgoingRequest = await FriendRequest.find({
       sender: req.user.id,
       status: "pending",
     }).populate(
