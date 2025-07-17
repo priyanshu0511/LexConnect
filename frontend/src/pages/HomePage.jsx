@@ -42,7 +42,6 @@ const HomePage = () => {
 
   useEffect(() => {
     const outgoingIds = new Set();
-    console.log(recommendedUsers);
     if (outgoingFriendReqs && outgoingFriendReqs.length > 0) {
       outgoingFriendReqs.forEach((req) => {
         // console.log(req);
@@ -168,7 +167,7 @@ const HomePage = () => {
               })}
             </div>
           )}
-                  </section>
+        </section>
       </div>
     </div>
   );

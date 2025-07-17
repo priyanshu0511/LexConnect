@@ -17,7 +17,7 @@ function App() {
 
   const authUser = authData?.user;
 
-  const {theme}=useThemeStore();
+  const { theme } = useThemeStore();
 
   const isAuthenticated = Boolean(authUser);
   const isOnBoarded = authUser?.isOnBoarded;
@@ -31,7 +31,7 @@ function App() {
           path="/"
           element={
             isAuthenticated && isOnBoarded ? (
-              <Layout showSidebar={true} >
+              <Layout showSidebar={true}>
                 <HomePage />
               </Layout>
             ) : (
@@ -76,12 +76,26 @@ function App() {
         <Route
           path="/notifications"
           element={
-            isAuthenticated ? <NotificationsPage /> : <Navigate to="/login" />
+            isAuthenticated && isOnBoarded ? (
+              <Layout showSidebar={true}>
+                <NotificationsPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
           }
         />
         <Route
-          path="/chat"
-          element={isAuthenticated ? <ChatPage /> : <Navigate to="/login" />}
+          path="/chat/:id"
+          element={
+            isAuthenticated && isOnBoarded ? (
+              <Layout showSidebar={false}>
+                <ChatPage />
+              </Layout>
+            ) : (
+              <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+            )
+          }
         />
         <Route
           path="/call"
