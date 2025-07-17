@@ -130,7 +130,7 @@ export const getFriendRequests = async (req, res) => {
     const acceptedRequests = await FriendRequest.find({
       sender: req.user.id,
       status: "accepted",
-    }).populate("reciever", "fullName profilePic");
+    }).populate("receiver", "fullName profilePic");
 
     res.status(200).json({ incomingRequests, acceptedRequests });
   } catch (error) {
