@@ -1,6 +1,7 @@
 import React from "react";
-import { LANGUAGE_TO_FLAG } from "../constants";
 import { Link } from "react-router";
+import { getLanguageFlag } from "../lib/utils/getLanguageFlag";
+import { capitalize } from "../lib/utils/capitalize";
 
 const FriendCard = ({ friend }) => {
   return (
@@ -15,11 +16,11 @@ const FriendCard = ({ friend }) => {
         <div className="flex flex-wrap gap-1.5 mb-3">
           <span className="badge badge-outline text-xs">
             {getLanguageFlag(friend.nativeLanguage)}
-            Native: {friend.nativeLanguage}
+            Native: {capitalize(friend.nativeLanguage)}
           </span>
           <span className="badge badge-outline text-xs">
             {getLanguageFlag(friend.learningLanguage)}
-            Learning: {friend.learningLanguage}
+            Learning: {capitalize(friend.learningLanguage)}
           </span>
         </div>
         <Link to={`/chat/${friend._id}`} className="btn btn-outline w-full">
@@ -31,21 +32,3 @@ const FriendCard = ({ friend }) => {
 };
 
 export default FriendCard;
-
-export const getLanguageFlag = (language) => {
-  if (!language) return null;
-
-  const langLower = language.toLowerCase();
-  const countryCode = LANGUAGE_TO_FLAG[langLower];
-
-  if (countryCode) {
-    return (
-      <img
-        src={`https://flagcdn.com/24x18/${countryCode}.png`}
-        alt={`${langLower} flag`}
-        className="h-3 mr-1 inline-block"
-      />
-    );
-  }
-  return null;
-};

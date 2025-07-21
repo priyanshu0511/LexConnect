@@ -8,11 +8,12 @@ import {
 } from "../lib/api";
 import { Link } from "react-router";
 import { FaUser } from "react-icons/fa6";
-import FriendCard, { getLanguageFlag } from "../components/FriendCard";
+import FriendCard from "../components/FriendCard";
 import NoFriendFound from "../components/NoFriendFound";
 import { FaCheckCircle, FaMapPin } from "react-icons/fa";
 import { LuUserPlus } from "react-icons/lu";
-import { capitalize } from "../lib/utils";
+import { getLanguageFlag } from "../lib/utils/getLanguageFlag";
+import { capitalize } from "../lib/utils/capitalize";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -52,7 +53,7 @@ const HomePage = () => {
   }, [outgoingFriendReqs]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8 min-h-screen bg-base-100">
       <div className="container mx-auto space-y-10">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <h2 className="text-2xl sm:text-3xl fonr-bold tracking-tight">
@@ -70,7 +71,7 @@ const HomePage = () => {
         ) : friends.length === 0 ? (
           <NoFriendFound />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {friends.map((friend) => (
               <FriendCard key={friend._id} friend={friend} />
             ))}
@@ -114,7 +115,7 @@ const HomePage = () => {
                   >
                     <div className="card-body p-5 shadow-y-4">
                       <div className="flex items-center gap-3">
-                        <div className="avatar size-16 rounded-full">
+                        <div className="avatar size-12 rounded-full">
                           <img src={user.profilePic} alt={user.fullName} />
                         </div>
                         <div>
