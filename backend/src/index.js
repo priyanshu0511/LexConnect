@@ -26,6 +26,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/chat", chatRoutes);
 
+app.get('/',(req,res)=>{
+  res.send("Server running.")
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running at PORT ${PORT}`);
   connectDB();
