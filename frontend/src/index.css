@@ -3,6 +3,10 @@
   themes: all;
 }
 
+@theme {
+  --breakpoint-xs: 30rem;
+}
+
 .str-chat__channel {
   display: flex;
   align-items: center;
