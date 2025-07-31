@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import {
+  getFriendRequests,
   getOutgoingFriendReqs,
   getRecommendedUsers,
   getUserFriends,
@@ -18,6 +19,7 @@ import { capitalize } from "../lib/utils/capitalize";
 const HomePage = () => {
   const queryClient = useQueryClient();
   const [outgoingRequestIds, setOutgoingRequestIds] = useState(new Set());
+  const [incomingRequestIds, setIncomingRequestIds] = useState(new Set());
 
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
@@ -34,6 +36,13 @@ const HomePage = () => {
     queryFn: getOutgoingFriendReqs,
   });
 
+  const { data: friendReqs } = useQuery({
+    queryKey: ["friendReqs"],
+    queryFn: getFriendRequests,
+  });
+
+  const incomingFriendReqs = friendReqs?.incomingRequests || [];
+
   const { mutate: sendRequestMutation, isPending } = useMutation({
     mutationFn: sendFriendRequest,
     onSuccess: queryClient.invalidateQueries({
@@ -49,8 +58,11 @@ const HomePage = () => {
         outgoingIds.add(req.receiver._id);
       });
       setOutgoingRequestIds(outgoingIds);
+      const incomingIds = new Set();
+      incomingFriendReqs.forEach((req) => incomingIds.add(req.sender._id));
+      setIncomingRequestIds(incomingIds);
     }
-  }, [outgoingFriendReqs]);
+  }, [outgoingFriendReqs, incomingFriendReqs]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 min-h-screen bg-base-100">
@@ -108,6 +120,7 @@ const HomePage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {recommendedUsers.map((user) => {
                 const hasRequestBeenSent = outgoingRequestIds.has(user._id);
+                const doesRequestExist = incomingRequestIds.has(user._id);
                 return (
                   <div
                     key={user._id}
@@ -148,12 +161,19 @@ const HomePage = () => {
                           hasRequestBeenSent ? "btn-disabled" : "btn-primary"
                         }`}
                         onClick={() => sendRequestMutation(user._id)}
-                        disabled={hasRequestBeenSent || isPending}
+                        disabled={
+                          hasRequestBeenSent || isPending || doesRequestExist
+                        }
                       >
                         {hasRequestBeenSent ? (
                           <>
                             <FaCheckCircle className="size-4 mr-2" />
                             Request Sent
+                          </>
+                        ) : doesRequestExist ? (
+                          <>
+                            <FaCheckCircle className="size-4 mr-2" />
+                            Accept Request
                           </>
                         ) : (
                           <>
