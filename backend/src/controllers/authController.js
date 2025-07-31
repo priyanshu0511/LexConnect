@@ -53,14 +53,7 @@ export const signup = async (req, res) => {
       }
     );
 
-    res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: "None",
-      secure: true,
-    });
-
-    res.status(201).json({ success: true, user: newUser });
+    res.status(201).json({ success: true, token, user: newUser });
   } catch (error) {
     console.log("Error during signing up", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -90,14 +83,7 @@ export const login = async (req, res) => {
       expiresIn: "7d",
     });
 
-    res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: "None",
-      secure: true,
-    });
-
-    res.status(200).json({ success: true, user });
+    res.status(200).json({ success: true, token, user });
   } catch (error) {
     console.log("Error during logging in", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -105,8 +91,9 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("jwt");
-  res.status(200).json({ message: "Logout successful" });
+  res
+    .status(200)
+    .json({ message: "Logout successful (client must clear token)" });
 };
 
 export const onboard = async (req, res) => {
